@@ -20,7 +20,7 @@ class node:
                 return -1
             if(not isinstance(other,node)):
                 return -1
-            return self.freq > other.freq
+            return self.freq < other.freq
 
 class builder:
 
@@ -39,6 +39,7 @@ class builder:
     def heap_maker(self, frequency): #on construit la liste des nodes
         for key in frequency:
             noeud = node(key, frequency[key])
+            print(noeud.freq, noeud.char)
             heapq.heappush(self.heap, noeud)
 
     def tree_maker(self): #maintenant on relie les noeuds entre eux
@@ -50,12 +51,14 @@ class builder:
             merged = node(None, noeud1.freq + noeud2.freq) #On relie les noeuds, l'info sur les chars sera dans les noeuds fils
             merged.left = noeud1 #on met bien le plus petit à gauche
             merged.right = noeud2 #et le plus grand à droite
+            print(merged.freq)
             heapq.heappush(self.heap, merged) #et on remet ce noeud dans la liste des noeuds à traiter !
 
     def tree(self):
         frequency = self.make_frequency_dict()
         self.heap_maker(frequency)
         self.tree_maker()
+        print(frequency)
         return self.heap[0]
 
 def TreeBuilder(text):
@@ -79,8 +82,8 @@ class codec:
             return
 
         if root.char != None: #on est sur un noeud en bout de branche, qui est associé à un charactère
-            self.codes[root.char] = current_code
-            self.reversemapping[current_code] = root.char
+            self.codes[root.char] = current_code #dictionnaire de codage
+            self.reversemapping[current_code] = root.char #dictionnaire de décodage
             return
 
         self.codemaker_assist1(root.left, current_code + "0")
@@ -95,6 +98,7 @@ class codec:
     def encode(self,text):
         self.codemaker()
         encoded_text = self.get_encoded_text(text)
+        print(self.codes)
         return encoded_text
 
 def Codec(tree):
