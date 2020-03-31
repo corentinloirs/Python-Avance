@@ -67,9 +67,9 @@ def TreeBuilder(text):
 class codec:
 
     def __init__(self, tree):
-        self.reversemapping = {} #va servir pour le décodage
         self.tree = tree
-        self.codes = {} #contiendra les codes associés à chaque lettre
+        self.codes = {} #dico, à une lettre on associe un code
+        self.reversemapping = {} #dico inversé, à un code on associe une lettre
 
     def codemaker(self):
         root = self.tree
@@ -100,6 +100,20 @@ class codec:
         encoded_text = self.get_encoded_text(text)
         print(self.codes)
         return encoded_text
+
+    def decode(self, encoded_text):
+        self.codemaker()
+        current_code = ""
+        decoded_text = ""
+
+        for bit in encoded_text:
+            current_code += bit
+            if(current_code in self.reversemapping):
+                character = self.reversemapping[current_code]
+                decoded_text += character
+                current_code = ""
+
+        return decoded_text
 
 def Codec(tree):
     return codec(tree)
